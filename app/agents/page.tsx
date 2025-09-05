@@ -68,14 +68,14 @@ export default function AgentsPage() {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
-        <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+        <Link href="/" className="inline-flex items-center text-gray-300 hover:text-purple-400 mb-4 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Ana Sayfaya Dön
         </Link>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Agent'larım</h1>
-            <p className="text-gray-600">
+            <h1 className="text-4xl font-bold text-white mb-2">AI Agent'larım</h1>
+            <p className="text-gray-300">
               Oluşturduğunuz tüm AI agent'larını yönetin ve onlarla sohbet edin.
             </p>
           </div>
