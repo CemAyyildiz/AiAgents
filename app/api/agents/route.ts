@@ -12,7 +12,8 @@ export async function GET() {
         name: agent.name,
         role: agent.role,
         createdAt: agent.createdAt,
-        status: agent.status
+        status: agent.status,
+        nft: agent.nft
       }))
     })
   } catch (error) {

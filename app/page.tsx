@@ -34,16 +34,21 @@ export default function Home() {
       if (isRefresh) {
         setRefreshing(true)
       }
+      console.log('Fetching agents...')
       const response = await fetch('/api/agents')
+      console.log('Response status:', response.status)
       const data = await response.json()
+      console.log('Response data:', data)
       if (data.success) {
         setAgents(data.agents)
+        console.log('Agents set:', data.agents)
       }
     } catch (error) {
       console.error('Error fetching agents:', error)
     } finally {
       setLoading(false)
       setRefreshing(false)
+      console.log('Loading set to false')
     }
   }
 

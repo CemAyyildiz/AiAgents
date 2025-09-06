@@ -29,7 +29,8 @@ export async function GET(
         tools: agent.tools,
         fileName: agent.fileName,
         createdAt: agent.createdAt,
-        status: agent.status
+        status: agent.status,
+        nft: agent.nft
       }
     })
 
