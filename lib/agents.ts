@@ -9,6 +9,13 @@ export interface Agent {
   fileName?: string | null
   createdAt: string
   status: string
+  nft?: {
+    id: string
+    name: string
+    image: string
+    supply: number
+    price: number
+  }
 }
 
 // Load agents from file storage
