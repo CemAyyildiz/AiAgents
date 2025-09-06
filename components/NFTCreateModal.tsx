@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X, Upload, Image as ImageIcon } from 'lucide-react'
+import { useWallet } from '@/contexts/WalletContext'
 
 interface NFTCreateModalProps {
   agentId: string | null
@@ -11,6 +12,7 @@ interface NFTCreateModalProps {
 }
 
 export default function NFTCreateModal({ agentId, onClose, onSuccess, redirectToHome = false }: NFTCreateModalProps) {
+  const { account, isConnected } = useWallet()
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -42,6 +44,12 @@ export default function NFTCreateModal({ agentId, onClose, onSuccess, redirectTo
     setLoading(true)
     setError('')
 
+    if (!isConnected) {
+      setError('NFT oluşturmak için önce cüzdanınızı bağlayın!')
+      setLoading(false)
+      return
+    }
+
     if (!formData.name || !formData.description || !formData.price || !formData.image) {
       setError('Lütfen tüm alanları doldurun.')
       setLoading(false)
@@ -56,6 +64,8 @@ export default function NFTCreateModal({ agentId, onClose, onSuccess, redirectTo
       formDataToSend.append('price', formData.price)
       formDataToSend.append('supply', formData.supply.toString())
       formDataToSend.append('image', formData.image)
+      formDataToSend.append('creatorAddress', account || '')
+      formDataToSend.append('walletConnected', isConnected.toString())
 
       const response = await fetch('/api/nfts/create', {
         method: 'POST',
@@ -222,13 +232,15 @@ export default function NFTCreateModal({ agentId, onClose, onSuccess, redirectTo
               <button
                 type="submit"
                 className="flex-1 btn-primary"
-                disabled={loading}
+                disabled={loading || !isConnected}
               >
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Oluşturuluyor...
                   </>
+                ) : !isConnected ? (
+                  'Cüzdan Bağla'
                 ) : (
                   'NFT Oluştur'
                 )}

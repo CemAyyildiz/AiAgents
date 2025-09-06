@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAgentById, updateAgent } from '@/lib/agents'
+import { buyNFT } from '@/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
-    const { agentId, buyerAddress } = await request.json()
+    const { agentId, buyerAddress, walletConnected } = await request.json()
 
     if (!agentId || !buyerAddress) {
       return NextResponse.json(
@@ -12,63 +12,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Agent'ı bul
-    const agent = getAgentById(agentId)
-    if (!agent) {
+    if (walletConnected !== true) {
       return NextResponse.json(
-        { success: false, error: 'Agent bulunamadı' },
-        { status: 404 }
-      )
-    }
-
-    // Agent'ın NFT'si var mı kontrol et
-    if (!agent.nft) {
-      return NextResponse.json(
-        { success: false, error: 'Bu agent\'ın NFT\'si yok' },
+        { success: false, error: 'Cüzdan bağlantısı gereklidir' },
         { status: 400 }
       )
     }
 
-    // Supply kontrolü
-    if (agent.nft.supply <= 0) {
+    // NFT satın alma işlemini gerçekleştir
+    const result = await buyNFT(agentId, buyerAddress)
+    
+    if (!result.success) {
       return NextResponse.json(
-        { success: false, error: 'NFT stokta yok' },
+        { success: false, error: 'NFT satın alınamadı' },
         { status: 400 }
       )
     }
 
-    // Gerçek uygulamada burada blockchain işlemi yapılacak
-    // Şimdilik simüle ediyoruz
-    console.log(`NFT satın alma simülasyonu: Agent ${agentId}, Buyer: ${buyerAddress}`)
-    console.log(`Fiyat: ${agent.nft.price} ETH`)
-
-    // Supply'ı azalt
-    const updatedNft = {
-      ...agent.nft,
-      supply: agent.nft.supply - 1,
-      lastSale: {
-        buyer: buyerAddress,
-        price: agent.nft.price,
-        timestamp: new Date().toISOString()
-      }
-    }
-
-    // Agent'ı güncelle
-    const updatedAgent = updateAgent(agentId, { nft: updatedNft })
-    if (!updatedAgent) {
-      return NextResponse.json(
-        { success: false, error: 'Agent güncellenemedi' },
-        { status: 500 }
-      )
-    }
-
-    console.log('NFT satın alındı:', updatedNft.id, 'Kalan supply:', updatedNft.supply)
+    console.log('NFT satın alındı:', result.transaction?.id, 'Kalan supply:', result.agent?.nft?.supply)
 
     return NextResponse.json({
       success: true,
       message: 'NFT başarıyla satın alındı',
-      nft: updatedNft,
-      agent: updatedAgent
+      nft: result.agent?.nft,
+      agent: result.agent,
+      transaction: result.transaction
     })
 
   } catch (error) {

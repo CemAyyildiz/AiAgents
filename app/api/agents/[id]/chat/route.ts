@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAgentById } from '@/lib/agents'
+import { getAgentById } from '@/lib/database'
 import { generateAIResponse, type ChatMessage } from '@/lib/openai'
 
 // In-memory storage for chat history

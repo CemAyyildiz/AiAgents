@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAgentById, updateAgent } from '@/lib/agents'
+import { getAgentById, createNFT } from '@/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,10 +10,19 @@ export async function POST(request: NextRequest) {
     const price = formData.get('price') as string
     const supply = formData.get('supply') as string
     const image = formData.get('image') as File
+    const creatorAddress = formData.get('creatorAddress') as string
+    const walletConnected = formData.get('walletConnected') as string
 
     if (!agentId || !name || !description || !price || !supply || !image) {
       return NextResponse.json(
         { success: false, error: 'Tüm alanlar gereklidir' },
+        { status: 400 }
+      )
+    }
+
+    if (walletConnected !== 'true' || !creatorAddress) {
+      return NextResponse.json(
+        { success: false, error: 'Cüzdan bağlantısı gereklidir' },
         { status: 400 }
       )
     }
@@ -41,30 +50,29 @@ export async function POST(request: NextRequest) {
     const imageDataUrl = `data:${image.type};base64,${imageBase64}`
 
     // NFT oluştur
-    const nft = {
-      id: `nft_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
+    const nftData = {
       name,
       description,
       image: imageDataUrl,
       supply: parseInt(supply),
       price: parseFloat(price),
-      createdAt: new Date().toISOString()
+      creatorAddress
     }
 
     // Agent'ı güncelle
-    const updatedAgent = updateAgent(agentId, { nft })
+    const updatedAgent = await createNFT(agentId, nftData)
     if (!updatedAgent) {
       return NextResponse.json(
-        { success: false, error: 'Agent güncellenemedi' },
+        { success: false, error: 'NFT oluşturulamadı' },
         { status: 500 }
       )
     }
 
-    console.log('NFT oluşturuldu:', nft.id, 'Agent:', agentId)
+    console.log('NFT oluşturuldu:', updatedAgent.nft?.id, 'Agent:', agentId)
 
     return NextResponse.json({
       success: true,
-      nft,
+      nft: updatedAgent.nft,
       agent: updatedAgent
     })
 

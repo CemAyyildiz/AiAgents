@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Bot, Plus, MessageSquare, FileText, Zap, RefreshCw, ShoppingCart } from 'lucide-react'
+import { useWallet } from '@/contexts/WalletContext'
 
 interface Agent {
   id: string
@@ -20,6 +21,7 @@ interface Agent {
 }
 
 export default function Home() {
+  const { account, isConnected, provider, signer } = useWallet()
   const [agents, setAgents] = useState<Agent[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -34,31 +36,32 @@ export default function Home() {
       if (isRefresh) {
         setRefreshing(true)
       }
-      console.log('Fetching agents...')
       const response = await fetch('/api/agents')
-      console.log('Response status:', response.status)
       const data = await response.json()
-      console.log('Response data:', data)
       if (data.success) {
         setAgents(data.agents)
-        console.log('Agents set:', data.agents)
       }
     } catch (error) {
       console.error('Error fetching agents:', error)
     } finally {
       setLoading(false)
       setRefreshing(false)
-      console.log('Loading set to false')
     }
   }
 
   const handleBuyNFT = async (agentId: string) => {
+    if (!isConnected) {
+      alert('NFT satın almak için önce cüzdanınızı bağlayın!')
+      return
+    }
+
     if (!confirm('Bu NFT\'yi satın almak istediğinizden emin misiniz?')) {
       return
     }
 
     setBuying(agentId)
     try {
+      // Gerçek blockchain işlemi için API'ye wallet bilgilerini gönder
       const response = await fetch('/api/nfts/buy', {
         method: 'POST',
         headers: {
@@ -66,7 +69,8 @@ export default function Home() {
         },
         body: JSON.stringify({
           agentId,
-          buyerAddress: '0x' + Math.random().toString(16).substring(2, 42) // Simulated wallet address
+          buyerAddress: account,
+          walletConnected: true
         })
       })
 
@@ -210,7 +214,7 @@ export default function Home() {
                   
                   <button 
                     onClick={() => handleBuyNFT(agent.id)}
-                    disabled={buying === agent.id || agent.nft?.supply === 0}
+                    disabled={buying === agent.id || agent.nft?.supply === 0 || !isConnected}
                     className="w-full btn-primary flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {buying === agent.id ? (
@@ -220,6 +224,8 @@ export default function Home() {
                       </>
                     ) : agent.nft?.supply === 0 ? (
                       'Stokta Yok'
+                    ) : !isConnected ? (
+                      'Cüzdan Bağla'
                     ) : (
                       <>
                         <ShoppingCart className="w-4 h-4 mr-2" />

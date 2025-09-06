@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAgentById, deleteAgent } from '@/lib/agents'
+import { getAgentById, deleteAgent } from '@/lib/database'
 
 export async function GET(
   request: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const agentId = params.id
     console.log('GET /api/agents/[id] - Looking for agent:', agentId)
-    const agent = getAgentById(agentId)
+    const agent = await getAgentById(agentId)
 
     if (!agent) {
       console.log('GET /api/agents/[id] - Agent not found:', agentId)
@@ -49,7 +49,7 @@ export async function DELETE(
 ) {
   try {
     const agentId = params.id
-    const deleted = deleteAgent(agentId)
+    const deleted = await deleteAgent(agentId)
 
     if (!deleted) {
       return NextResponse.json(

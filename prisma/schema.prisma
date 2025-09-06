@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Agent {
+  id              String   @id @default(cuid())
+  name            String
+  role            String
+  tools           String   // JSON string of tools array
+  fileContent     String?
+  fileName        String?
+  createdAt       DateTime @default(now())
+  status          String   @default("active")
+  creatorAddress  String?
+  
+  // NFT relationship
+  nft             NFT?
+  
+  // Chat messages
+  messages        Message[]
+  
+  @@map("agents")
+}
+
+model NFT {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  image           String   // Base64 or IPFS URL
+  supply          Int
+  price           Float
+  createdAt       DateTime @default(now())
+  creatorAddress  String
+  
+  // Agent relationship
+  agentId         String   @unique
+  agent           Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  // Transactions
+  transactions    Transaction[]
+  
+  @@map("nfts")
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  nftId           String
+  buyerAddress    String
+  sellerAddress   String
+  price           Float
+  timestamp       DateTime @default(now())
+  transactionHash String?
+  
+  // NFT relationship
+  nft             NFT      @relation(fields: [nftId], references: [id], onDelete: Cascade)
+  
+  @@map("transactions")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  agentId   String
+  role      String   // 'user' or 'assistant'
+  content   String
+  timestamp DateTime @default(now())
+  
+  // Agent relationship
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAgents, createAgent, type Agent } from '@/lib/agents'
+import { getAgents, createAgent, type Agent } from '@/lib/database'
 
 export async function GET() {
   try {
-    const agents = getAgents()
+    const agents = await getAgents()
     console.log('GET /api/agents - Found agents:', agents.length)
     return NextResponse.json({ 
       success: true, 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const agent = createAgent({
+    const agent = await createAgent({
       name: agentName,
       role: role,
       tools: tools ? JSON.parse(tools) : ['web_search'],
