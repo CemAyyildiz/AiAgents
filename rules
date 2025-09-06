@@ -35,3 +35,5 @@ Tüm Cihazlara Uyum: Geliştirdiğin tüm arayüz bileşenleri ve sayfalar, kesi
 Media Queries: CSS'te veya ilgili stil dosyalarında, farklı ekran boyutlarına uygun media query'ler kullanarak tasarımın duyarlılığını sağlamalısın.
 
 Esnek Düzenler: Sabit genişlikler yerine, esnek düzenleri (Flexbox, Grid gibi) tercih et. Bu, içeriğin farklı ekran boyutlarına otomatik olarak adapte olmasına yardımcı olur.
+
+Her zaman yapacağın tüm yeni eklentiler veya işler responsive olmalı projenin tamamı responsive olmalıdır.
