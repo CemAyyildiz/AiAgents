@@ -78,7 +78,7 @@ export default function CreateAgent() {
         setCreatedAgent(data.agent)
         setSuccess(true)
         setTimeout(() => {
-          router.push(`/agents/${data.agent.id}`)
+          router.push('/agents')
         }, 2000)
       } else {
         alert('Agent oluşturulurken hata oluştu: ' + data.error)
