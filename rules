@@ -1,0 +1,37 @@
+ORVİUM Frontend Geliştirme Kuralları Dosyası
+Bu dosya, Orvium AI Agent Marketplace'in frontend geliştirme sürecinde uyulması gereken temel kuralları içerir. Bu kurallara tam olarak uymak, kod tabanının bütünlüğünü korumak ve iş birliğini kolaylaştırmak için zorunludur.
+
+1. Ana Prensip: Sadece Frontend Değişiklikleri
+İşlevsellik Dokunulmazlığı: Yaptığın tüm değişiklikler sadece kullanıcı arayüzü (UI) ve kullanıcı deneyimini (UX) hedeflemelidir. Var olan bir butonun, formun veya herhangi bir bileşenin backend (arka uç) ile olan bağlantısını, veri gönderme mantığını veya API çağrılarını kesinlikle değiştirme.
+
+Örnek:
+
+Doğru: Bir butonun rengini, konumunu veya yazı tipini değiştirmek.
+
+Yanlış: Bir butona tıklandığında çalışan fonksiyonun adını veya içeriğini değiştirmek, backend'e gönderilen verinin formatını değiştirmek.
+
+Kural: Var olan işlevin dış görünüşünü ve etkileşimini şekillendir, iç mantığını ve işleyişini olduğu gibi koru.
+
+2. Talimat Odaklı Çalışma
+Spesifik Görevler: Yalnızca sana verilen spesifik görevler üzerinde çalış. Herhangi bir kod dosyasında veya bileşende, sana verilen talimatların dışında kalan bir değişiklik yapma.
+
+Kapsam Sınırlaması: Yapman gereken değişiklikler, yalnızca talimat verilen sayfa, bileşen veya kod bloğu ile sınırlıdır. Örneğin, sana ana sayfanın navigasyon menüsünü düzenleme görevi verilmişse, marketplace kartlarının tasarımına müdahale etme.
+
+İletişim: Bir görevin kapsamı hakkında şüphen olursa veya beklenmedik bir durumla karşılaşırsan, değişiklik yapmadan önce ekip liderinle veya ilgili kişiyle iletişime geç.
+
+3. Tasarım ve Estetik Uyum
+Görsel Referanslar: Frontend çalışmalarında, sana sağlanan görsel referanslara (sayfa tasarımları, prototipler, vs.) sıkı sıkıya bağlı kal. Tasarımın renk paleti, tipografi, boşluklar (spacing) ve genel estetiği referanslardaki gibi olmalıdır.
+
+Tasarım Tutarlılığı: Tüm UI bileşenlerinde (butonlar, kartlar, form alanları, vs.) tutarlılık sağlamalısın. Yeni bir bileşen eklerken, mevcut tasarım diline uygun olmasına dikkat et.
+
+4. Kodu Temiz ve Düzenli Tutma
+Yorumlar: Yaptığın önemli değişiklikleri açıklayan kısa ve anlaşılır kod yorumları ekle. Bu, gelecekte başka geliştiricilerin kodu anlamasına yardımcı olur.
+
+Dosya Yapısı: Mevcut dosya ve klasör yapısını bozma. Yeni bileşenler eklerken, bunları mantıksal olarak uygun klasörlere (örneğin, components klasörü altına) yerleştir.
+
+5. Duyarlı (Responsive) Tasarım Zorunluluğu
+Tüm Cihazlara Uyum: Geliştirdiğin tüm arayüz bileşenleri ve sayfalar, kesinlikle duyarlı (responsive) olmalıdır. Tasarımın mobil, tablet ve masaüstü cihazlarda sorunsuz bir şekilde görüntülenmesi ve kullanılabilir olması gerekir.
+
+Media Queries: CSS'te veya ilgili stil dosyalarında, farklı ekran boyutlarına uygun media query'ler kullanarak tasarımın duyarlılığını sağlamalısın.
+
+Esnek Düzenler: Sabit genişlikler yerine, esnek düzenleri (Flexbox, Grid gibi) tercih et. Bu, içeriğin farklı ekran boyutlarına otomatik olarak adapte olmasına yardımcı olur.
